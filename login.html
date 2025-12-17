@@ -6,6 +6,53 @@
   <title>管理员登录 - 深圳市宏业农产品实业发展有限公司</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* 基础样式补全（防止样式缺失导致按钮不可点击） */
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .form-title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
     /* 底部联系电话样式 */
     .footer-contact {
       margin-top: 60px;
@@ -27,13 +74,12 @@
   <div class="container">
     <div class="login-box">
       <h3 class="form-title">深圳市宏业农产品实业发展有限公司 - 管理员登录</h3>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="password">管理密码</label>
-          <input type="password" id="password" placeholder="默认密码：123456（可修改）" required>
-        </div>
-        <button type="submit" class="btn btn-primary">登录</button>
-      </form>
+      <!-- 给按钮加ID，确保事件可绑定 -->
+      <div class="form-group">
+        <label for="password">管理密码</label>
+        <input type="password" id="password" placeholder="默认密码：123456（可修改）" required>
+      </div>
+      <button id="loginBtn" class="btn btn-primary">登录</button>
     </div>
 
     <!-- 底部联系电话 -->
@@ -44,4 +90,38 @@
   </div>
 
   <script>
-    // 登录验证（
+    // 方式1：直接绑定按钮点击事件（替代表单提交，更稳定）
+    document.getElementById('loginBtn').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const inputPwd = passwordInput.value.trim();
+      
+      // 空值验证
+      if (!inputPwd) {
+        alert('请输入管理密码！');
+        passwordInput.focus();
+        return;
+      }
+      
+      // 获取本地存储的密码（默认123456）
+      const savedPwd = localStorage.getItem('adminPwd') || '123456';
+      
+      if (inputPwd === savedPwd) {
+        // 登录成功，标记状态并跳转
+        localStorage.setItem('isLogin', 'true');
+        window.location.href = 'admin.html';
+      } else {
+        alert('密码错误！默认密码是123456');
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    // 兼容回车提交
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('loginBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>
